@@ -16,7 +16,7 @@
 	"eggColorBackground": 4673362,
 	"eggColorForeground": 15921906,
 	"hasTrait": 0,
-	"parentA": "crimsonchickens:dye_white_chicken",
-	"parentB": "crimsonchickens:dye_black_chicken",
+	"parentA": "crimsonchickens:dye_white",
+	"parentB": "crimsonchickens:dye_black",
 	"enabled": true
 }

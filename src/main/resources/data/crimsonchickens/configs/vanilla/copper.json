@@ -1,6 +1,6 @@
 {
 	"displayName": "Copper Chicken",
-	"dropItem": "",
+	"dropItem": "minecraft:copper_ingot",
 	"dropItemNBT": "",
 	"spawnNaturally": false,
 	"spawnType": 1,

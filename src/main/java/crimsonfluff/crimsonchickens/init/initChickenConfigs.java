@@ -17,9 +17,15 @@ import java.nio.file.*;
 import java.util.stream.Stream;
 
 public class initChickenConfigs {
-    private static final Path MOD_ROOT = FabricLoader.getInstance().getGameDir();
+    private static Path MOD_ROOT; // = FabricLoader.getInstance().getModContainer(CrimsonChickens.MOD_ID).get().getRootPath();
 
     public static void loadConfigs() {
+        if (FabricLoader.getInstance().isDevelopmentEnvironment())
+            MOD_ROOT = FabricLoader.getInstance().getModContainer(CrimsonChickens.MOD_ID).get().getRootPath();
+        else
+            // TODO: Un-Hack this !!!!
+            MOD_ROOT = FabricLoader.getInstance().getConfigDir().getParent().resolve("mods/Crimson-Chickens-1.17.1-Fabric-v1.0.1.jar");
+
         File dir = FabricLoader.getInstance().getConfigDir().resolve(CrimsonChickens.MOD_ID).toFile();
 
         // copy configs from 'data/crimsonchickens'
@@ -72,7 +78,7 @@ public class initChickenConfigs {
         if (Files.isRegularFile(MOD_ROOT)) {
             // started getting ambiguous filesystem, so cast to `(ClassLoader) null` seems to fix it?
             // https://bugs.openjdk.java.net/browse/JDK-8223197
-            try (FileSystem fileSystem = FileSystems.newFileSystem(MOD_ROOT, null)) {
+            try (FileSystem fileSystem = FileSystems.newFileSystem(MOD_ROOT, (ClassLoader) null)) {
                 Path path = fileSystem.getPath(dataPath);
 //                if (! Files.exists(targetPath)) targetPath.toFile().mkdir();
 

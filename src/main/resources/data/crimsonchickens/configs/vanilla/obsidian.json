@@ -16,7 +16,7 @@
 	"eggColorBackground": 526350,
 	"eggColorForeground": 4602464,
 	"hasTrait": 0,
-	"parentA": "crimsonchickens:lava_chicken",
-	"parentB": "crimsonchickens:water_chicken",
+	"parentA": "crimsonchickens:lava",
+	"parentB": "crimsonchickens:water",
 	"enabled": true
 }

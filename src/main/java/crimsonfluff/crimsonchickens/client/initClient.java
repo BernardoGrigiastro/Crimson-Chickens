@@ -1,7 +1,6 @@
 package crimsonfluff.crimsonchickens.client;
 
 import crimsonfluff.crimsonchickens.CrimsonChickens;
-import crimsonfluff.crimsonchickens.blocks.NestTileEntity;
 import crimsonfluff.crimsonchickens.entity.ResourceChickenRenderer;
 import crimsonfluff.crimsonchickens.init.initBlocks;
 import crimsonfluff.crimsonchickens.init.initRegistry;
@@ -15,7 +14,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
@@ -35,9 +33,9 @@ public class initClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(initBlocks.NEST_BLOCK, RenderLayer.getCutout());
         BlockEntityRendererRegistry.register(initTiles.NEST_BLOCK_TILE, NestRenderer::new);
 
-        initRegistry.MOD_CHICKENS.forEach((s, resourceChicken) -> EntityRendererRegistry.register(resourceChicken, (manager) -> {
-            ResourceChickenData chickenData = ChickenRegistry.getRegistry().getChickenData(s);
-            return new ResourceChickenRenderer(manager, chickenData);
+        initRegistry.MOD_CHICKENS.forEach((id, resourceChicken) -> EntityRendererRegistry.register(resourceChicken, context -> {
+            ResourceChickenData chickenData = ChickenRegistry.getRegistry().getChickenData(id);
+            return new ResourceChickenRenderer(context, chickenData);
         }));
 
         receiveEntityPacket();

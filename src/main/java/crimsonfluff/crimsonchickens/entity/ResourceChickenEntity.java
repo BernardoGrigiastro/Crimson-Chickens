@@ -22,6 +22,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.EntityDamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -75,9 +76,6 @@ public class ResourceChickenEntity extends ChickenEntity {
     public int conversionRequired = 0;
     public int conversionCount = 0;
     private int jumpingCooldown;
-
-    //public int eggLayTime;
-    private int noJumpDelay;
 
     public ResourceChickenEntity(EntityType<? extends ChickenEntity> type, World world, ResourceChickenData chickenData) {
         super(type, world);
@@ -484,17 +482,17 @@ public class ResourceChickenEntity extends ChickenEntity {
             if (! this.world.isClient) {
                 Explosion.DestructionType destructionType = this.world.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING) ? Explosion.DestructionType.DESTROY : Explosion.DestructionType.NONE;
                 this.dead = true;
-                this.world.createExplosion(this, this.getX(), this.getY(), this.getZ(), 10, destructionType);
+                this.world.createExplosion(this, this.getX(), this.getY(), this.getZ(), 1 + (this.dataTracker.get(STRENGTH) / 2f), destructionType);
                 this.remove(RemovalReason.DISCARDED);
 
-                // TODO:
-//                if (damageSource.getSource() != null) damageSource.getSource().damage(new DamageSource("chicken.explode"), 10);
+                if (damageSource.getSource() != null) damageSource.getSource().damage(new
+                        EntityDamageSource("chicken.explode", damageSource.getSource()), 1 + (this.dataTracker.get(STRENGTH) / 2f));
             }
         }
         else if (chickenData.hasTrait == 4) {
-//            if (! this.world.isClient)
-//                // TODO:
-//                if (damageSource.getSource() != null) damageSource.getSource().damage(new DamageSource("chicken.thorns"), 1);
+            if (! this.world.isClient)
+                if (damageSource.getSource() != null) damageSource.getSource().damage(new
+                        EntityDamageSource("chicken.thorns", damageSource.getSource()), 1 + (this.dataTracker.get(STRENGTH) / 2f));
         }
     }
 
@@ -507,19 +505,15 @@ public class ResourceChickenEntity extends ChickenEntity {
         if (this.isAlive()) {
             if (chickenData.hasTrait == 2) {
                 if (! this.world.isClient && (damageSource.getSource() instanceof LivingEntity) && this.random.nextInt(10) != 0) {
-//                this.teleport();
                     for (int i = 0; i < 64; ++ i) {
                         if (this.teleport()) return wasHurt;
                     }
-
-//                LOGGER.info("TELEPORT");
-//                return false;
                 }
             }
             else if (chickenData.hasTrait == 4) {
-//TODO:
-                //                if (! this.world.isClient)
-//                    if (damageSource.getSource() != null) damageSource.getSource().damage(new DamageSource("chicken.thorns"), 1);
+                if (! this.world.isClient)
+                    if (damageSource.getSource() != null) damageSource.getSource().damage(new
+                            EntityDamageSource("chicken.thorns", damageSource.getSource()), 1 + (this.dataTracker.get(STRENGTH) / 2f));
             }
         }
 
@@ -558,7 +552,7 @@ public class ResourceChickenEntity extends ChickenEntity {
 
     @Override
     protected void dropLoot(DamageSource damageSource, boolean applyLuckFromLastHurtByPlayer) {
-        if (! CrimsonChickens.CONFIGURATION.allowFakeplayerLootDrops) return;
+        //if (! CrimsonChickens.CONFIGURATION.allowFakeplayerLootDrops) return;
 
         Identifier resourcelocation;
         if (chickenData.hasTrait == 1)
@@ -577,7 +571,7 @@ public class ResourceChickenEntity extends ChickenEntity {
 
     @Override
     protected void dropEquipment(DamageSource damageSource, int lootingMultiplier, boolean allowDrops) {
-        if (! CrimsonChickens.CONFIGURATION.allowFakeplayerLootDrops) return; // TODO: <- redo this
+        //if (! CrimsonChickens.CONFIGURATION.allowFakeplayerLootDrops) return; // TODO: <- redo this
 
         int r = new Random().nextInt(100) + 1;
         if (r <= CrimsonChickens.CONFIGURATION.allowDeathDropResource)
@@ -728,9 +722,9 @@ public class ResourceChickenEntity extends ChickenEntity {
         entity.pushAwayFrom(this);
 
         if (! this.world.isClient) {
-            if (this.chickenData.hasTrait == 4) entity.damage(DamageSource.thorns(entity), 1 + (this.dataTracker.get(STRENGTH) / 2f));
+            if (this.chickenData.hasTrait == 4) entity.damage(new EntityDamageSource("chicken.thorns", entity), 1 + (this.dataTracker.get(STRENGTH) / 2f));
             if (this.chickenData.hasTrait == 5) entity.setOnFireFor(1 + (this.dataTracker.get(STRENGTH) / 2));
-            if (this.chickenData.hasTrait == 9) ((LivingEntity) entity).addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, 4 * 20));
+            if (this.chickenData.hasTrait == 9) ((LivingEntity) entity).addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, (1 + (this.dataTracker.get(STRENGTH) / 2)) * 20));
         }
     }
 
@@ -749,18 +743,17 @@ public class ResourceChickenEntity extends ChickenEntity {
                         itemStack.damage(1, playerIn, plyr -> plyr.sendToolBreakStatus(handIn));
 
                         World world = playerIn.world;
-                        BlockPos pos = playerIn.getBlockPos();
+                        BlockPos pos = this.getBlockPos();
 
-                        // TODO:
-//                        this.damage(new DamageSource("death.attack.shears"), 1);
+                        this.damage(new EntityDamageSource("death.attack.shears", playerIn), 1);
                         ((ServerWorld) world).spawnParticles(ParticleTypes.CRIT, pos.getX(), pos.getY() + this.getEyeY(), pos.getZ(), 10, 0.5, 0.5, 0.5, 0);
 
                         world.playSound(null, pos, SoundEvents.ENTITY_SHEEP_SHEAR, SoundCategory.PLAYERS, 1f, 1f);
 
                         world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(),
                             this.chickenData.hasTrait == 1
-                                ? new ItemStack(initItems.FEATHER_DUCK)
-                                : new ItemStack(Items.FEATHER)));
+                            ? new ItemStack(initItems.FEATHER_DUCK)
+                            : new ItemStack(Items.FEATHER)));
 
                         return ActionResult.SUCCESS;
                     }
@@ -790,9 +783,6 @@ public class ResourceChickenEntity extends ChickenEntity {
 
                         // if converting a partly already converted chicken then reset/remove type/count
                         if (! chickenData.dropItemItem.equals(this.conversionType)) {
-                            // TODO:
-                            // this.getPersistentData().remove("Mutation");
-
                             NbtCompound nbtCompound = this.writeNbt(new NbtCompound());
                             nbtCompound.remove("Mutation");
                             this.readNbt(nbtCompound);
@@ -815,23 +805,11 @@ public class ResourceChickenEntity extends ChickenEntity {
 
                             ResourceChickenEntity newChick = initRegistry.MOD_CHICKENS.get(chickenData.name).create(playerIn.world);
                             if (newChick != null) {
-                                newChick.copyFrom(this);
-                                newChick.setUuid(UUID.randomUUID());        // TODO: remove uuid,  Duplicate ID error when spawning
-
-                                NbtCompound nbtCompound = newChick.writeNbt(new NbtCompound());
+                                NbtCompound nbtCompound = this.writeNbt(new NbtCompound());
                                 nbtCompound.remove("Mutation");
+                                nbtCompound.remove("UUID");
                                 newChick.readNbt(nbtCompound);
 
-                                //playerIn.sendMessage(new LiteralText(nbtCompound.asString()), false);
-
-                                if (this.hasCustomName()) {
-                                    newChick.setCustomName(this.getCustomName());
-                                    newChick.setCustomNameVisible(this.isCustomNameVisible());
-                                }
-
-                                newChick.setInvulnerable(this.isInvulnerable());
-
-//                        newChick.setYHeadRot(targetChicken.getYHeadRot());
                                 playerIn.world.spawnEntity(newChick);
                             }
                         }

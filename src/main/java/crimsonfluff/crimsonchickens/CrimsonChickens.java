@@ -13,15 +13,25 @@ import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.tag.BlockTags;
+import net.minecraft.tag.ItemTags;
+import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.collection.Pool;
 import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.biome.SpawnSettings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -41,9 +51,6 @@ public class CrimsonChickens implements ModInitializer {
 
     @Override
     public void onInitialize() {
-//        AutoConfig.register(SimpleMagnetConfig.class, GsonConfigSerializer::new);
-//        CONFIG = AutoConfig.getConfigHolder(CrimsonChickensConfig.class).getConfig();
-
         initConfigs.register();
         initItems.register();
         initBlocks.register();
@@ -53,25 +60,29 @@ public class CrimsonChickens implements ModInitializer {
 
         initChickenConfigs.loadConfigs();
 
-        initRegistry.MOD_CHICKENS.forEach((s, resourceChicken) -> {
-            if (s.equals("angry"))
-                FabricDefaultAttributeRegistry.register(resourceChicken, AngryChickenEntity.createChickenAttributes(s));
+        initRegistry.MOD_CHICKENS.forEach((id, resourceChicken) -> {
+            if (id.equals("angry"))
+                FabricDefaultAttributeRegistry.register(resourceChicken, AngryChickenEntity.createChickenAttributes(id));
             else
-                FabricDefaultAttributeRegistry.register(resourceChicken, ResourceChickenEntity.createChickenAttributes(s));
+                FabricDefaultAttributeRegistry.register(resourceChicken, ResourceChickenEntity.createChickenAttributes(id));
         });
 
-        Identifier id = Registry.ENTITY_TYPE.getId(EntityType.CHICKEN);
+        Identifier chicken_id = Registry.ENTITY_TYPE.getId(EntityType.CHICKEN);
         BuiltinRegistries.BIOME.forEach(biome -> {
-            initRegistry.MOD_CHICKENS.forEach((s, resourceChicken) -> {
-                ResourceChickenData chickenData = ChickenRegistry.getRegistry().getChickenData(s);
+            initRegistry.MOD_CHICKENS.forEach((id, resourceChicken) -> {
+                ResourceChickenData chickenData = ChickenRegistry.getRegistry().getChickenData(id);
 
                 if (chickenData.spawnNaturally) {
-                    if (s.equals("chicken")) {
-                        BiomeModifications.addSpawn(BiomeSelectors.categories(biome.getCategory()), SpawnGroup.CREATURE, resourceChicken, chickenData.spawnWeight, 4, 4);
+                    if (id.equals("chicken")) {
+                        List<SpawnSettings.SpawnEntry> spawns = biome.getSpawnSettings().getSpawnEntries(SpawnGroup.CREATURE).getEntries();
+                        if (spawns.stream().anyMatch(tag -> tag.type == EntityType.CHICKEN)) {
+                            BiomeModifications.create(chicken_id).add(ModificationPhase.REMOVALS, BiomeSelectors.categories(biome.getCategory()), context -> {
+                                context.getSpawnSettings().removeSpawnsOfEntityType(EntityType.CHICKEN);
+                            });
 
-                        BiomeModifications.create(id).add(ModificationPhase.REMOVALS, BiomeSelectors.categories(biome.getCategory()), context -> {
-                            context.getSpawnSettings().removeSpawnsOfEntityType(EntityType.CHICKEN);
-                        });
+                            BiomeModifications.addSpawn(BiomeSelectors.categories(biome.getCategory()), SpawnGroup.CREATURE, resourceChicken, chickenData.spawnWeight, 4, 4);
+//                            LOGGER.info("Chicken Added: " + biome);
+                        }
 
                     } else {
                         String biomeString = '"' + biome.toString() + '"';
@@ -99,6 +110,25 @@ public class CrimsonChickens implements ModInitializer {
                 }
             });
         });
+
+        // Vanilla chicken from SpawnEgg/Spawner/Summon
+        ServerEntityEvents.ENTITY_LOAD.register((entity, serverWorld) -> {
+            if (entity.getType() == EntityType.CHICKEN) {
+                entity.remove(Entity.RemovalReason.DISCARDED);
+
+                ResourceChickenEntity entity2 = initRegistry.MOD_CHICKENS.get("chicken").create(serverWorld);
+                if (entity2 != null) {
+                    entity2.copyPositionAndRotation(entity);
+
+                    NbtCompound nbtCompound = entity.writeNbt(new NbtCompound());
+                    nbtCompound.remove("Dimension");
+                    nbtCompound.remove("UUID");
+                    entity2.readNbt(nbtCompound);
+
+                    serverWorld.spawnEntity(entity2);
+                }
+            }
+        });
     }
 
     public static int calcNewEggLayTime(Random r, ResourceChickenData rcd, int growth) {
@@ -121,7 +151,20 @@ public class CrimsonChickens implements ModInitializer {
 
         // TODO: if no drop item then try and find a loot table?
         if (! chickenData.dropItemItem.equals("")) {
-            ItemStack itemStack = new ItemStack(Registry.ITEM.get(new Identifier(chickenData.dropItemItem)));
+            ItemStack itemStack = ItemStack.EMPTY;
+
+            if (chickenData.dropItemItem.startsWith("item:")) {
+                Tag<Item> iTag = ItemTags.getTagGroup().getTag(new Identifier(chickenData.dropItemItem.substring(5)));
+                if (iTag != null)
+                    itemStack = new ItemStack(iTag.values().get(0));
+            }
+            else if (chickenData.dropItemItem.startsWith("block:")) {
+                Tag<Block> iTag = BlockTags.getTagGroup().getTag(new Identifier(chickenData.dropItemItem.substring(6)));
+                if (iTag != null)
+                    itemStack = new ItemStack(iTag.values().get(0));
+            }
+            else
+                itemStack = new ItemStack(Registry.ITEM.get(new Identifier(chickenData.dropItemItem)));
 
             if (! itemStack.isEmpty()) {
                 if (chickenData.dropItemNBT != null) itemStack.setNbt(chickenData.dropItemNBT.copy());

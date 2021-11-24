@@ -2,7 +2,6 @@ package crimsonfluff.crimsonchickens.blocks;
 
 import crimsonfluff.crimsonchickens.init.initTiles;
 import net.minecraft.block.*;
-import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;

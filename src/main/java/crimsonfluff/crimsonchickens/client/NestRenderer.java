@@ -10,7 +10,6 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
@@ -24,11 +23,8 @@ import net.minecraft.util.math.Vec3f;
 public class NestRenderer implements BlockEntityRenderer<NestTileEntity> {
     private static final ChickenNestedModel<ChickenEntity> chickenModel = new ChickenNestedModel<>(ChickenNestedModel.getTexturedModelData().createModel());
     private static final MinecraftClient mc = MinecraftClient.getInstance();
-    //protected final BlockEntityRenderDispatcher dispatcher;
 
-    public NestRenderer(BlockEntityRendererFactory.Context ctx) {
-        //this.dispatcher = dispatcher;
-    }
+    public NestRenderer(BlockEntityRendererFactory.Context context) {}
 
     @Override
     public void render(NestTileEntity blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
@@ -68,7 +64,6 @@ public class NestRenderer implements BlockEntityRenderer<NestTileEntity> {
 
     // EntityRenderer.class
     private void renderLabel(MatrixStack matrixStack, VertexConsumerProvider vertexConsumers, int light, Text text) {
-//        TextRenderer textRenderer = dispatcher.getTextRenderer();
         TextRenderer textRenderer = mc.textRenderer;
 
         matrixStack.push();
@@ -79,7 +74,7 @@ public class NestRenderer implements BlockEntityRenderer<NestTileEntity> {
 
         matrixStack.translate(0.5f, 1f, 0.5f);
         matrixStack.scale(scale, scale, scale);
-        matrixStack.multiply(mc.getEntityRenderDispatcher().getRotation());         // face the camera
+        matrixStack.multiply(mc.getEntityRenderDispatcher().getRotation());          // face the camera
         matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(180f));     // flip vertical
 
         textRenderer.draw(text, offset, 0, 553648127, false, matrix4f, vertexConsumers, true, opacity, light);
