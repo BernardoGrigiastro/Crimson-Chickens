@@ -17,17 +17,25 @@ import java.nio.file.*;
 import java.util.stream.Stream;
 
 public class initChickenConfigs {
-    private static final Path MOD_ROOT = FabricLoader.getInstance().getGameDir();
+    private static Path MOD_ROOT; // = FabricLoader.getInstance().getModContainer(CrimsonChickens.MOD_ID).get().getRootPath();
 
     public static void loadConfigs() {
+        if (FabricLoader.getInstance().isDevelopmentEnvironment())
+            MOD_ROOT = FabricLoader.getInstance().getModContainer(CrimsonChickens.MOD_ID).get().getRootPath();
+        else
+            // TODO: Un-Hack this !!!!
+            MOD_ROOT = FabricLoader.getInstance().getConfigDir().getParent().resolve("mods/Crimson-Chickens-1.16.5-Fabric-v1.0.1.jar");
+
         File dir = FabricLoader.getInstance().getConfigDir().resolve(CrimsonChickens.MOD_ID).toFile();
+
+//        CrimsonChickens.LOGGER.info("PATH: " + MOD_ROOT);
 
         // copy configs from 'data/crimsonchickens'
         // only set up defaults if 'config/crimsonchickens' folder does not exist
         if (! dir.exists()) {
             if (dir.mkdir()) {
-                copyDefaultConfigs("/data/crimsonchickens/configs/vanilla", Paths.get(dir.toString(), "vanilla"));
-                copyDefaultConfigs("/data/crimsonchickens/configs/modded", Paths.get(dir.toString(), "modded"));
+                copyDefaultConfigs("data/crimsonchickens/configs/vanilla", Paths.get(dir.toString(), "vanilla"));
+                copyDefaultConfigs("data/crimsonchickens/configs/modded", Paths.get(dir.toString(), "modded"));
             }
         }
 

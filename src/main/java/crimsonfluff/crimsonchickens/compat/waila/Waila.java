@@ -1,4 +1,4 @@
-package crimsonfluff.crimsonchickens.compat;
+package crimsonfluff.crimsonchickens.compat.waila;
 
 import crimsonfluff.crimsonchickens.blocks.Nest;
 import crimsonfluff.crimsonchickens.blocks.NestTileEntity;

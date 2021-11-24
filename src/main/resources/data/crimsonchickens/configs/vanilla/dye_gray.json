@@ -3,7 +3,7 @@
 	"dropItem": "minecraft:gray_dye",
 	"dropItemNBT": "",
 	"spawnNaturally": false,
-	"spawnType": 0,
+	"spawnType": 1,
 	"spawnWeight": 15,
 	"canBreed": true,
 	"baseHealth": 4,
@@ -16,7 +16,7 @@
 	"eggColorBackground": 4673362,
 	"eggColorForeground": 15921906,
 	"hasTrait": 0,
-	"parentA": "crimsonchickens:dye_white_chicken",
-	"parentB": "crimsonchickens:dye_black_chicken",
+	"parentA": "crimsonchickens:dye_white",
+	"parentB": "crimsonchickens:dye_black",
 	"enabled": true
 }

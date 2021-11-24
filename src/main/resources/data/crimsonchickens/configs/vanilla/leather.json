@@ -3,7 +3,7 @@
 	"dropItem": "minecraft:leather",
 	"dropItemNBT": "",
 	"spawnNaturally": false,
-	"spawnType": 0,
+	"spawnType": 1,
 	"spawnWeight": 15,
 	"canBreed": true,
 	"baseHealth": 4,
@@ -16,7 +16,7 @@
 	"eggColorBackground": 10985580,
 	"eggColorForeground": 9539985,
 	"hasTrait": 0,
-	"parentA": "crimsonchickens:dye_brown_chicken",
-	"parentB": "crimsonchickens:spider_chicken",
+	"parentA": "crimsonchickens:dye_brown",
+	"parentB": "crimsonchickens:spider",
 	"enabled": true
 }

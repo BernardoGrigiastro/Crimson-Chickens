@@ -4,15 +4,17 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.NameTagItem;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.text.LiteralText;
 import net.minecraft.util.*;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.hit.BlockHitResult;
@@ -25,6 +27,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Random;
 import java.util.stream.Stream;
 
 public class Nest extends Block implements BlockEntityProvider  {
@@ -151,32 +154,32 @@ public class Nest extends Block implements BlockEntityProvider  {
 
         ItemStack itemStack = player.getStackInHand(hand);
         if (itemStack.isEmpty()) return ActionResult.CONSUME;
-        Item item = itemStack.getItem();
 
-        // Note: Can not shift click seeds into the nest. This method is not called
-        // try and insert item into the Nest, it only accepts seeds, so if returns .isEmpty()
-        // then it must have been a seed, and must have been inserted
-//TODO:
-//        if (ItemHandlerHelper.insertItem(te.STORED_ITEMS, new ItemStack(item, 1), false).isEmpty()) {
-//            Random r = new Random();
-//            for (int a = 0; a < 4; a++) {
-//                double d0 = r.nextGaussian() * 0.2D;
-//                double d1 = r.nextGaussian() * 0.2D;
-//                double d2 = r.nextGaussian() * 0.2D;
-//
-//                if (te.entityCaptured != null)
-//                    ((ServerWorld) world).spawnParticles(ParticleTypes.HEART, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 1, d0, d1, d2, 0);
-//            }
-//
+        // slot 0 is only slot player is allowed to add to, and its seeds only
+        if (te.isValid(0, itemStack)) {
+            te.addToExistingSlot(itemStack, 0, player.isCreative());
+
+            te.getItems().forEach(stack -> player.sendMessage(new LiteralText(stack.toString()), false));
+
+            Random r = new Random();
+            for (int a = 0; a < 4; a++) {
+                double d0 = r.nextGaussian() * 0.2D;
+                double d1 = r.nextGaussian() * 0.2D;
+                double d2 = r.nextGaussian() * 0.2D;
+
+                if (te.entityCaptured != null)
+                    ((ServerWorld) world).spawnParticles(ParticleTypes.HEART, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 1, d0, d1, d2, 0);
+            }
+
 //            if (! player.isCreative()) itemStack.decrement(1);
-//            te.sendUpdates();
-//
-//            return ActionResult.SUCCESS;
-//        }
+            te.sendUpdates();
+
+            return ActionResult.SUCCESS;
+        }
 
         // inc. modded name tags?
         // blank name tags will remove name
-        if (item instanceof NameTagItem) {
+        if (itemStack.getItem() instanceof NameTagItem) {
             te.entitySetCustomName(itemStack.getSubTag("display"));
             te.sendUpdates();
 
@@ -199,8 +202,8 @@ public class Nest extends Block implements BlockEntityProvider  {
             NestTileEntity te = (NestTileEntity) world.getBlockEntity(pos);
 
             if (te != null) {
-                if (! te.STORED_ITEMS.isEmpty()) {
-                    te.STORED_ITEMS.forEach(item -> { Block.dropStack(world, pos, item); });
+                if (! te.getItems().isEmpty()) {
+                    te.getItems().forEach(item -> { Block.dropStack(world, pos, item); });
                 }
 
                 if (te.entityCaptured != null) {

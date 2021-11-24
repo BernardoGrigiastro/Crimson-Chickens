@@ -25,7 +25,6 @@ import net.minecraft.util.registry.Registry;
 import java.util.UUID;
 
 public class initClient implements ClientModInitializer {
-
     public static final Identifier DUCK_EGG_SPAWN_PACKET = new Identifier(CrimsonChickens.MOD_ID, "duck_egg_spawn_packet");
 
     @Override
