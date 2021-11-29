@@ -23,7 +23,7 @@ public class DuckEgg extends Item {
         if (! worldIn.isClient) {
             DuckEggProjectileEntity eggentity = new DuckEggProjectileEntity(worldIn, playerIn);
             eggentity.setItem(itemstack);
-            eggentity.setProperties(playerIn, playerIn.getPitch(), playerIn.getYaw(), 0.0F, 1.5F, 1.0F);
+            eggentity.setVelocity(playerIn, playerIn.getPitch(), playerIn.getYaw(), 0.0F, 1.5F, 1.0F);
             worldIn.spawnEntity(eggentity);
         }
 

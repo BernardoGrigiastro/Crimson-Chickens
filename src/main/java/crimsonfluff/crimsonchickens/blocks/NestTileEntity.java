@@ -7,7 +7,6 @@ import crimsonfluff.crimsonchickens.init.initSounds;
 import crimsonfluff.crimsonchickens.init.initTiles;
 import crimsonfluff.crimsonchickens.json.ResourceChickenData;
 import crimsonfluff.crimsonchickens.registry.ChickenRegistry;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.HopperBlockEntity;
@@ -17,6 +16,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
@@ -27,7 +27,7 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class NestTileEntity extends BlockEntity implements ImplementedInventory, BlockEntityClientSerializable {
+public class NestTileEntity extends BlockEntity implements ImplementedInventory {
     private final DefaultedList<ItemStack> STORED_ITEMS = DefaultedList.ofSize(4, ItemStack.EMPTY);
 
     @Override
@@ -62,7 +62,7 @@ public class NestTileEntity extends BlockEntity implements ImplementedInventory,
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound compound) {
+    public void writeNbt(NbtCompound compound) {
         Inventories.writeNbt(compound, STORED_ITEMS);
 
         if (this.entityCaptured != null) {
@@ -76,8 +76,19 @@ public class NestTileEntity extends BlockEntity implements ImplementedInventory,
 
 //        CrimsonChickens.LOGGER.info("SaveNBT: " + compound);
 
-        return super.writeNbt(compound);
+//        return super.writeNbt(compound);
     }
+
+    @Override
+    public BlockEntityUpdateS2CPacket toUpdatePacket() {
+        return BlockEntityUpdateS2CPacket.create(this);
+    }
+
+    @Override
+    public NbtCompound toInitialChunkDataNbt() {
+        return this.createNbt();
+    }
+
 
 // Note: Now called from the Block(Nest) not the TileEntity
     public static void tick(World world, BlockPos pos, BlockState state, NestTileEntity blockEntity) {
@@ -134,18 +145,6 @@ public class NestTileEntity extends BlockEntity implements ImplementedInventory,
             }
         }
     }
-
-//    @Nullable
-//    @Override
-//    public SUpdateTileEntityPacket getUpdatePacket() {
-//        return new SUpdateTileEntityPacket(worldPosition, 1, getUpdateTag());
-//    }
-//
-//    @Override
-//    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-//        CompoundNBT nbt = pkt.getTag();
-//        handleUpdateTag(getBlockState(), nbt);
-//    }
 
     public void entityRemove(boolean sendUpdates) {
         this.chickenAge = 0;
@@ -206,31 +205,31 @@ public class NestTileEntity extends BlockEntity implements ImplementedInventory,
         }
     }
 
-    @Override
-    public void fromClientTag(NbtCompound compound) {
-        entityRemove(false);        // reset all fields
-
-        Inventories.readNbt(compound, STORED_ITEMS);
-
-        if (compound.contains("entityCaptured"))
-            entitySet(compound.getCompound("entityCaptured"), compound.getString("entityDescription"), false);
-    }
-
-    @Override
-    public NbtCompound toClientTag(NbtCompound compound) {
-        if (this.entityCaptured != null)
-            compound.put("entityCaptured", this.entityCaptured);
-
-        if (! this.entityDescription.isEmpty())
-            compound.putString("entityDescription", this.entityDescription);
-
-//        if (CrimsonChickens.CONFIGURATION.renderItems.get())
-//            Inventories.writeNbt(compound, STORED_ITEMS);        // TODO: this changed `Inventory` to `Items` (needed for render)
-
-        //CrimsonChickens.LOGGER.info("getUpdateTagNBT: " + compound);
-
-        return compound;
-    }
+//    @Override
+//    public void fromClientTag(NbtCompound compound) {
+//        entityRemove(false);        // reset all fields
+//
+//        Inventories.readNbt(compound, STORED_ITEMS);
+//
+//        if (compound.contains("entityCaptured"))
+//            entitySet(compound.getCompound("entityCaptured"), compound.getString("entityDescription"), false);
+//    }
+//
+//    @Override
+//    public NbtCompound toClientTag(NbtCompound compound) {
+//        if (this.entityCaptured != null)
+//            compound.put("entityCaptured", this.entityCaptured);
+//
+//        if (! this.entityDescription.isEmpty())
+//            compound.putString("entityDescription", this.entityDescription);
+//
+////        if (CrimsonChickens.CONFIGURATION.renderItems.get())
+////            Inventories.writeNbt(compound, STORED_ITEMS);        // TODO: this changed `Inventory` to `Items` (needed for render)
+//
+//        //CrimsonChickens.LOGGER.info("getUpdateTagNBT: " + compound);
+//
+//        return compound;
+//    }
 
     @Override
     public boolean isValid(int slot, ItemStack stack) {

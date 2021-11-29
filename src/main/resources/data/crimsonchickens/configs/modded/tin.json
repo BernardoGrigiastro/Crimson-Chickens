@@ -1,6 +1,6 @@
 {
 	"displayName": "Tin Chicken",
-	"dropItem": "",
+	"dropItem": "items:c:tin_ingots",
 	"dropItemNBT": "",
 	"spawnNaturally": false,
 	"spawnType": 1,

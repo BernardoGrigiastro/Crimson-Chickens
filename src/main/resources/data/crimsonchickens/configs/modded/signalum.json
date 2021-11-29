@@ -1,6 +1,6 @@
 {
 	"displayName": "Signalum Chicken",
-	"dropItem": "",
+	"dropItem": "items:c:signalum_ingots",
 	"dropItemNBT": "",
 	"spawnNaturally": false,
 	"spawnType": 1,

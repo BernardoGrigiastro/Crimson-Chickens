@@ -1,6 +1,6 @@
 {
 	"displayName": "Aluminum Chicken",
-	"dropItem": "",
+	"dropItem": "items:c:aluminum_ingots",
 	"dropItemNBT": "",
 	"spawnNaturally": false,
 	"spawnType": 1,

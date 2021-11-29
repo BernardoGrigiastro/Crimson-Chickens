@@ -1,6 +1,6 @@
 {
 	"displayName": "Silicon Chicken",
-	"dropItem": "",
+	"dropItem": "items:c:silicon_ingots",
 	"dropItemNBT": "",
 	"spawnNaturally": false,
 	"spawnType": 1,

@@ -1,6 +1,6 @@
 {
 	"displayName": "Enderium Chicken",
-	"dropItem": "",
+	"dropItem": "items:c:enderium_ingots",
 	"dropItemNBT": "",
 	"spawnNaturally": false,
 	"spawnType": 1,

@@ -1,6 +1,6 @@
 {
 	"displayName": "Uranium Chicken",
-	"dropItem": "",
+	"dropItem": "items:c:uranium_ingots",
 	"dropItemNBT": "",
 	"spawnNaturally": false,
 	"spawnType": 1,

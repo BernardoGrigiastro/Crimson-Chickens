@@ -3,8 +3,10 @@ package crimsonfluff.crimsonchickens.init;
 import crimsonfluff.crimsonchickens.CrimsonChickens;
 import crimsonfluff.crimsonchickens.items.AnimalNet;
 import crimsonfluff.crimsonchickens.items.DuckEgg;
+import crimsonfluff.crimsonchickens.items.LiquidEgg;
 import crimsonfluff.crimsonchickens.items.xpItem;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.FoodComponents;
 import net.minecraft.item.Item;
@@ -14,9 +16,6 @@ import net.minecraft.util.registry.Registry;
 public class initItems {
     public static final Item EGG_DUCK = new DuckEgg();
     public static final Item FEATHER_DUCK = new Item(new FabricItemSettings().group(CrimsonChickens.CREATIVE_TAB));
-
-//    public static final Item WATER_EGG = new LiquidEgg(Fluids.WATER.getStill());
-//    public static final Item LAVA_EGG = new LiquidEgg(Fluids.LAVA.getStill());
 
     public static final Item ANIMAL_NET = new AnimalNet();
 
@@ -34,8 +33,8 @@ public class initItems {
         Registry.register(Registry.ITEM, new Identifier(CrimsonChickens.MOD_ID, "duck_cooked"), new Item(new FabricItemSettings().group(CrimsonChickens.CREATIVE_TAB).food(FoodComponents.COOKED_CHICKEN)));
         Registry.register(Registry.ITEM, new Identifier(CrimsonChickens.MOD_ID, "duck_feather"), FEATHER_DUCK);
 
-//        Registry.register(Registry.ITEM, new Identifier(CrimsonChickens.MOD_ID, "water_egg"), WATER_EGG);
-//        Registry.register(Registry.ITEM, new Identifier(CrimsonChickens.MOD_ID, "lava_egg"), LAVA_EGG);
+        Registry.register(Registry.ITEM, new Identifier(CrimsonChickens.MOD_ID, "water_egg"), new LiquidEgg(Fluids.WATER.getStill()));
+        Registry.register(Registry.ITEM, new Identifier(CrimsonChickens.MOD_ID, "lava_egg"), new LiquidEgg(Fluids.LAVA.getStill()));
 
         Registry.register(Registry.ITEM, new Identifier(CrimsonChickens.MOD_ID, "animal_net"), ANIMAL_NET);
 

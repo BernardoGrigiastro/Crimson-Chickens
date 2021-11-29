@@ -153,13 +153,13 @@ public class CrimsonChickens implements ModInitializer {
         if (! chickenData.dropItemItem.equals("")) {
             ItemStack itemStack = ItemStack.EMPTY;
 
-            if (chickenData.dropItemItem.startsWith("item:")) {
-                Tag<Item> iTag = ItemTags.getTagGroup().getTag(new Identifier(chickenData.dropItemItem.substring(5)));
+            if (chickenData.dropItemItem.startsWith("items:")) {
+                Tag<Item> iTag = ItemTags.getTagGroup().getTag(new Identifier(chickenData.dropItemItem.substring(6)));
                 if (iTag != null)
                     itemStack = new ItemStack(iTag.values().get(0));
             }
-            else if (chickenData.dropItemItem.startsWith("block:")) {
-                Tag<Block> iTag = BlockTags.getTagGroup().getTag(new Identifier(chickenData.dropItemItem.substring(6)));
+            else if (chickenData.dropItemItem.startsWith("blocks:")) {
+                Tag<Block> iTag = BlockTags.getTagGroup().getTag(new Identifier(chickenData.dropItemItem.substring(7)));
                 if (iTag != null)
                     itemStack = new ItemStack(iTag.values().get(0));
             }

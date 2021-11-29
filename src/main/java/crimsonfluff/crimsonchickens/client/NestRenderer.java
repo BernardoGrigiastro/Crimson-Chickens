@@ -70,7 +70,7 @@ public class NestRenderer implements BlockEntityRenderer<NestTileEntity> {
         float scale = 0.02f;
         int opacity = (int) (mc.options.getTextBackgroundOpacity(0.25F) * 255.0F) << 24;
         float offset = (float) (- textRenderer.getWidth(text) / 2);
-        Matrix4f matrix4f = matrixStack.peek().getModel();
+        Matrix4f matrix4f = matrixStack.peek().getPositionMatrix();
 
         matrixStack.translate(0.5f, 1f, 0.5f);
         matrixStack.scale(scale, scale, scale);

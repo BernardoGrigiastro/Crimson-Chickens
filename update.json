@@ -1,17 +1,19 @@
 {
   "homepage": "https://www.curseforge.com/minecraft/mc-mods/crimson-chickens-fabric",
   "promos": {
-    "1.16.5-latest": "1.0.1",
-    "1.16.5-recommended": "1.0.1",
-    "1.17.1-latest": "1.0.1",
-    "1.17.1-recommended": "1.0.1"
+    "1.16.5-latest": "1.0.2",
+    "1.16.5-recommended": "1.0.2",
+    "1.17.1-latest": "1.0.2",
+    "1.17.1-recommended": "1.0.2"
   },
   "1.16.5": {
     "1.0.0": "Fabric 1.16.5, v0.12.3",
-    "1.0.1": "Self Extract Configs. All biomes fix. Support tags"
+    "1.0.1": "Self Extract Configs. All biomes fix. Support tags",
+    "1.0.2": "Liquid Eggs. Static Voxel. Tag Support. Config Tags"
   },
   "1.17.1": {
     "1.0.0": "Fabric 1.17.1, v0.12.5",
-    "1.0.1": "Self Extract Configs. All biomes fix. Support tags"
+    "1.0.1": "Self Extract Configs. All biomes fix. Support tags",
+    "1.0.2": "Liquid Eggs. Static Voxel. Tag Support. Config Tags"
   }
 }

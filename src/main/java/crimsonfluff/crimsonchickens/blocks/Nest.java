@@ -35,6 +35,40 @@ import java.util.stream.Stream;
 
 public class Nest extends BlockWithEntity  {
     public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
+    private static final VoxelShape NEST_SHAPE = Stream.of(Block.createCuboidShape(12, 2.1, 5, 13, 3.1, 7),
+        Block.createCuboidShape(5, 0.1, 5, 11, 1.1, 11),
+        Block.createCuboidShape(12, 1.1, 7, 13, 2.1, 9),
+        Block.createCuboidShape(3, 1.1, 7, 4, 2.1, 9),
+        Block.createCuboidShape(4, 0.1, 7, 5, 1.1, 9),
+        Block.createCuboidShape(11, 0.1, 7, 12, 1.1, 9),
+        Block.createCuboidShape(7, 1.1, 3, 9, 2.1, 4),
+        Block.createCuboidShape(7, 0.1, 4, 9, 1.1, 5),
+        Block.createCuboidShape(7, 0.1, 11, 9, 1.1, 12),
+        Block.createCuboidShape(7, 1.1, 12, 9, 2.1, 13),
+        Block.createCuboidShape(4, 1.1, 9, 5, 2.1, 11),
+        Block.createCuboidShape(11, 1.1, 9, 12, 2.1, 11),
+        Block.createCuboidShape(11, 2.1, 11, 12, 3.1, 12),
+        Block.createCuboidShape(11, 2.1, 4, 12, 3.1, 5),
+        Block.createCuboidShape(4, 2.1, 4, 5, 3.1, 5),
+        Block.createCuboidShape(4, 2.1, 11, 5, 3.1, 12),
+        Block.createCuboidShape(11, 1.1, 5, 12, 2.1, 7),
+        Block.createCuboidShape(4, 1.1, 5, 5, 2.1, 7),
+        Block.createCuboidShape(13, 2.1, 7, 14, 3.1, 9),
+        Block.createCuboidShape(2, 2.1, 7, 3, 3.1, 9),
+        Block.createCuboidShape(7, 2.1, 2, 9, 3.1, 3),
+        Block.createCuboidShape(7, 2.1, 13, 9, 3.1, 14),
+        Block.createCuboidShape(12, 2.1, 9, 13, 3.1, 11),
+        Block.createCuboidShape(9, 2.1, 12, 11, 3.1, 13),
+        Block.createCuboidShape(5, 2.1, 12, 7, 3.1, 13),
+        Block.createCuboidShape(5, 1.1, 11, 7, 2.1, 12),
+        Block.createCuboidShape(5, 1.1, 4, 7, 2.1, 5),
+        Block.createCuboidShape(9, 1.1, 4, 11, 2.1, 5),
+        Block.createCuboidShape(9, 1.1, 11, 11, 2.1, 12),
+        Block.createCuboidShape(3, 2.1, 9, 4, 3.1, 11),
+        Block.createCuboidShape(3, 2.1, 5, 4, 3.1, 7),
+        Block.createCuboidShape(5, 2.1, 3, 7, 3.1, 4),
+        Block.createCuboidShape(9, 2.1, 3, 11, 3.1, 4))
+        .reduce((v1, v2) -> VoxelShapes.combine(v1, v2, BooleanBiFunction.OR)).get();
 
     public Nest() {
         super(Settings.of(Material.SOLID_ORGANIC, MapColor.YELLOW)
@@ -44,42 +78,9 @@ public class Nest extends BlockWithEntity  {
         this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH));
     }
 
-    @Override       // TODO: client config for simple bounding box - maybe save some FPS ?  or make static
+    @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView worldIn, BlockPos pos, ShapeContext context) {
-        return Stream.of(Block.createCuboidShape(12, 2.1, 5, 13, 3.1, 7),
-            Block.createCuboidShape(5, 0.1, 5, 11, 1.1, 11),
-            Block.createCuboidShape(12, 1.1, 7, 13, 2.1, 9),
-            Block.createCuboidShape(3, 1.1, 7, 4, 2.1, 9),
-            Block.createCuboidShape(4, 0.1, 7, 5, 1.1, 9),
-            Block.createCuboidShape(11, 0.1, 7, 12, 1.1, 9),
-            Block.createCuboidShape(7, 1.1, 3, 9, 2.1, 4),
-            Block.createCuboidShape(7, 0.1, 4, 9, 1.1, 5),
-            Block.createCuboidShape(7, 0.1, 11, 9, 1.1, 12),
-            Block.createCuboidShape(7, 1.1, 12, 9, 2.1, 13),
-            Block.createCuboidShape(4, 1.1, 9, 5, 2.1, 11),
-            Block.createCuboidShape(11, 1.1, 9, 12, 2.1, 11),
-            Block.createCuboidShape(11, 2.1, 11, 12, 3.1, 12),
-            Block.createCuboidShape(11, 2.1, 4, 12, 3.1, 5),
-            Block.createCuboidShape(4, 2.1, 4, 5, 3.1, 5),
-            Block.createCuboidShape(4, 2.1, 11, 5, 3.1, 12),
-            Block.createCuboidShape(11, 1.1, 5, 12, 2.1, 7),
-            Block.createCuboidShape(4, 1.1, 5, 5, 2.1, 7),
-            Block.createCuboidShape(13, 2.1, 7, 14, 3.1, 9),
-            Block.createCuboidShape(2, 2.1, 7, 3, 3.1, 9),
-            Block.createCuboidShape(7, 2.1, 2, 9, 3.1, 3),
-            Block.createCuboidShape(7, 2.1, 13, 9, 3.1, 14),
-            Block.createCuboidShape(12, 2.1, 9, 13, 3.1, 11),
-            Block.createCuboidShape(9, 2.1, 12, 11, 3.1, 13),
-            Block.createCuboidShape(5, 2.1, 12, 7, 3.1, 13),
-            Block.createCuboidShape(5, 1.1, 11, 7, 2.1, 12),
-            Block.createCuboidShape(5, 1.1, 4, 7, 2.1, 5),
-            Block.createCuboidShape(9, 1.1, 4, 11, 2.1, 5),
-            Block.createCuboidShape(9, 1.1, 11, 11, 2.1, 12),
-            Block.createCuboidShape(3, 2.1, 9, 4, 3.1, 11),
-            Block.createCuboidShape(3, 2.1, 5, 4, 3.1, 7),
-            Block.createCuboidShape(5, 2.1, 3, 7, 3.1, 4),
-            Block.createCuboidShape(9, 2.1, 3, 11, 3.1, 4))
-        .reduce((v1, v2) -> VoxelShapes.combine(v1, v2, BooleanBiFunction.OR)).get();
+        return NEST_SHAPE;
     }
 
     @Override
@@ -93,23 +94,24 @@ public class Nest extends BlockWithEntity  {
         builder.add(FACING);
     }
 
+    @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
     }
 
+    @Override
     public BlockState rotate(BlockState state, BlockRotation rotation) {
         return state.with(FACING, rotation.rotate(state.get(FACING)));
     }
 
+    @Override
     public BlockState mirror(BlockState state, BlockMirror mirror) {
         return state.rotate(mirror.getRotation(state.get(FACING)));
     }
 
-
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) { return new NestTileEntity(pos, state); }
-
 
     // AbstractFurnace.class
     @Nullable
@@ -121,44 +123,6 @@ public class Nest extends BlockWithEntity  {
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
         return checkType(world, type, initTiles.NEST_BLOCK_TILE);
     }
-
-//    @Override
-//    public boolean hasTileEntity(BlockState state) {return true;}
-
-//    @Override
-//    public void addProbeInfo(ProbeMode probeMode, IProbeInfo iProbeInfo, PlayerEntity playerEntity, World world, BlockState blockState, IProbeHitData iProbeHitData) {
-//        NestTileEntity te = (NestTileEntity) world.getBlockEntity(iProbeHitData.getPos());
-//        if (te == null) return;
-//
-//        if (te.entityCaptured != null) {
-//            iProbeInfo.text(new StringTextComponent(te.entityDescription));
-//
-//            if (te.entityCustomName != null)
-//                iProbeInfo.text(te.entityCustomName);
-//
-//            if (te.entityCaptured.getBoolean("analyzed")) {
-//                iProbeInfo.text(new TranslationTextComponent("tip.crimsonchickens.growth", te.chickenGrowth));
-//                iProbeInfo.text(new TranslationTextComponent("tip.crimsonchickens.gain", te.chickenGain));
-//                iProbeInfo.text(new TranslationTextComponent("tip.crimsonchickens.strength", te.chickenStrength));
-//            }
-//
-//            if (te.chickenAge < 0) {
-//                iProbeInfo.text(new TranslationTextComponent("tip.crimsonchickens.growing", CrimsonChickens.formatTime(- te.chickenAge)));
-//
-//            }
-//            else {
-//                if (te.storedItems.getStackInSlot(0).isEmpty()) {
-//                    iProbeInfo.text(CompoundText.create().style(TextStyleClass.WARNING).text(new TranslationTextComponent("tip.crimsonchickens.seeds")));
-//
-//                }
-//                else {
-//                    if (te.entityCaptured.getInt("EggLayTime") != 0) {
-//                        iProbeInfo.text(new TranslationTextComponent("tip.crimsonchickens.egg", CrimsonChickens.formatTime(te.eggLayTime)));
-//                    }
-//                }
-//            }
-//        }
-//    }
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
@@ -174,7 +138,7 @@ public class Nest extends BlockWithEntity  {
         if (te.isValid(0, itemStack)) {
             te.addToExistingSlot(itemStack, 0, player.isCreative());
 
-            te.getItems().forEach(stack -> player.sendMessage(new LiteralText(stack.toString()), false));
+            //te.getItems().forEach(stack -> player.sendMessage(new LiteralText(stack.toString()), false));
 
             Random r = new Random();
             for (int a = 0; a < 4; a++) {
@@ -204,12 +168,6 @@ public class Nest extends BlockWithEntity  {
 
         return super.onUse(state, world, pos, player, hand, hit);
     }
-
-//    @Override
-//    public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean p_220069_6_) {
-//        if (pos.below().equals(fromPos))
-//            ((NestTileEntity) world.getBlockEntity(pos)).updateCache();
-//    }
 
     @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean p_196243_5_) {
