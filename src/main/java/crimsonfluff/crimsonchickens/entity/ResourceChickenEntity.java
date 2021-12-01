@@ -88,9 +88,17 @@ public class ResourceChickenEntity extends ChickenEntity {
     public static DefaultAttributeContainer.Builder createChickenAttributes(String name) {
         ResourceChickenData chickenData = ChickenRegistry.getRegistry().getChickenData(name);
 
-        return createMobAttributes()
-            .add(EntityAttributes.GENERIC_MAX_HEALTH, chickenData.baseHealth)
-            .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, chickenData.baseSpeed);
+        if (name.equals("angry"))
+            return createMobAttributes()
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 1)
+                .add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK, 1)
+                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 0)
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, chickenData.baseHealth)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, chickenData.baseSpeed);
+        else
+            return createMobAttributes()
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, chickenData.baseHealth)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, chickenData.baseSpeed);
     }
 
     @Override
@@ -439,7 +447,6 @@ public class ResourceChickenEntity extends ChickenEntity {
 
         super.onDeath(damageSource);
 
-
         if (this.chickenData.name.equals("grave")) {
             // restore player inventory
             // if player has item already in slot then drop item and restore original item
@@ -447,7 +454,7 @@ public class ResourceChickenEntity extends ChickenEntity {
             PlayerEntity playerIn = (PlayerEntity) damageSource.getSource();
             PlayerInventory playerInv = playerIn.getInventory();
 
-//            NbtList lst = this.getPersistentData().getList("Inventory", 10);
+//            NbtList lst = this.writeCustomDataToNbt().getList("Inventory", 10);
             NbtList lst = new NbtList();
 
             for (int i = 0; i < lst.size(); ++ i) {
@@ -498,26 +505,36 @@ public class ResourceChickenEntity extends ChickenEntity {
 
     @Override
     public boolean damage(DamageSource damageSource, float amount) {
-        boolean wasHurt = super.damage(damageSource, amount);
-
 //        if (damageSource.getSource() instanceof FakePlayer) return wasHurt;
 
         if (this.isAlive()) {
-            if (chickenData.hasTrait == 2) {
-                if (! this.world.isClient && (damageSource.getSource() instanceof LivingEntity) && this.random.nextInt(10) != 0) {
-                    for (int i = 0; i < 64; ++ i) {
-                        if (this.teleport()) return wasHurt;
+            if (! world.isClient) {
+                if (chickenData.hasTrait == 2) {
+                    if ((damageSource.getSource() instanceof LivingEntity) && this.random.nextInt(10) != 0) {
+                        for (int i = 0; i < 64; ++i) {
+                            if (this.teleport()) break;
+                        }
                     }
+                } else if (chickenData.hasTrait == 4) {
+                    // Issue #15
+                    // cactus chicken hurts cactus chicken then infinite damage loop
+                    if (damageSource.getSource() instanceof ResourceChickenEntity) {
+                        ResourceChickenData damageChickenData = ((ResourceChickenEntity) damageSource.getSource()).chickenData;
+                        if (damageChickenData.hasTrait == 4)
+                            return false;
+                    }
+
+                    // immune to cactus
+                    if (damageSource == DamageSource.CACTUS)
+                        return false;
+
+                    if (damageSource.getSource() instanceof LivingEntity)
+                        damageSource.getSource().damage(new EntityDamageSource("chicken.thorns", damageSource.getSource()), 1 + (this.dataTracker.get(STRENGTH) / 2f));
                 }
-            }
-            else if (chickenData.hasTrait == 4) {
-                if (! this.world.isClient)
-                    if (damageSource.getSource() != null) damageSource.getSource().damage(new
-                            EntityDamageSource("chicken.thorns", damageSource.getSource()), 1 + (this.dataTracker.get(STRENGTH) / 2f));
             }
         }
 
-        return wasHurt;
+        return super.damage(damageSource, amount);
     }
 
     protected boolean teleport() {

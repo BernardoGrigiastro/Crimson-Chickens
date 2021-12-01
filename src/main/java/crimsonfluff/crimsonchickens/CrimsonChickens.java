@@ -28,7 +28,6 @@ import net.minecraft.tag.BlockTags;
 import net.minecraft.tag.ItemTags;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.Pool;
 import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.SpawnSettings;
@@ -41,6 +40,7 @@ import java.util.Random;
 
 //  /summon crimsonchickens:blaze ~ ~ ~ {Age:-24000,analyzed:1,strength:10,gain:10,growth:10}
 //  /summon crimsonchickens:blaze ~ ~ ~ {analyzed:1,strength:10,gain:10,growth:10}
+//  /summon crimsonchickens:angry ~ ~ ~ {analyzed:1,strength:10,gain:10,growth:10}
 
 public class CrimsonChickens implements ModInitializer {
     public static final String MOD_ID = "crimsonchickens";
@@ -80,31 +80,29 @@ public class CrimsonChickens implements ModInitializer {
                                 context.getSpawnSettings().removeSpawnsOfEntityType(EntityType.CHICKEN);
                             });
 
-                            BiomeModifications.addSpawn(BiomeSelectors.categories(biome.getCategory()), SpawnGroup.CREATURE, resourceChicken, chickenData.spawnWeight, 4, 4);
+                            BiomeModifications.addSpawn(BiomeSelectors.categories(biome.getCategory()), SpawnGroup.CREATURE, resourceChicken, chickenData.spawnWeight, 1, 2);
 //                            LOGGER.info("Chicken Added: " + biome);
                         }
 
                     } else {
-                        String biomeString = '"' + biome.toString() + '"';
-
                         if (chickenData.biomesWhitelist != null) {
-                            if (chickenData.biomesWhitelist.toString().contains(biomeString)) {
-                                //LOGGER.info("BIOME_WHITELIST: " + biomeString + " : " + s);
+                            if (chickenData.biomesWhitelist.toString().contains(biome.toString())) {
+//                                LOGGER.info("BIOME_WHITELIST: " + biome + " : " + id);
 
-                                BiomeModifications.addSpawn(BiomeSelectors.categories(biome.getCategory()), chickenData.spawnType, resourceChicken, chickenData.spawnWeight, 1, 4);
+                                BiomeModifications.addSpawn(BiomeSelectors.categories(biome.getCategory()), chickenData.spawnType, resourceChicken, chickenData.spawnWeight, 1, 2);
                             }
 
                         } else if (chickenData.biomesBlacklist != null) {
-                            if (! chickenData.biomesBlacklist.toString().contains(biomeString)) {
-                                //LOGGER.info("BIOME_BLACKLIST: " + biomeString + " : " + s);
+                            if (! chickenData.biomesBlacklist.toString().contains(biome.toString())) {
+//                                LOGGER.info("BIOME_BLACKLIST: " + biome + " : " + id);
 
-                                BiomeModifications.addSpawn(BiomeSelectors.categories(biome.getCategory()), chickenData.spawnType, resourceChicken, chickenData.spawnWeight, 1, 4);
+                                BiomeModifications.addSpawn(BiomeSelectors.categories(biome.getCategory()), chickenData.spawnType, resourceChicken, chickenData.spawnWeight, 1, 2);
                             }
 
                         } else {
-                            //LOGGER.info("BIOME_NATURAL: " + biomeString + " : " + s);
+//                            LOGGER.info("BIOME_NATURAL: " + biome + " : " + id);
 
-                            BiomeModifications.addSpawn(BiomeSelectors.categories(biome.getCategory()), chickenData.spawnType, resourceChicken, chickenData.spawnWeight, 1, 4);
+                            BiomeModifications.addSpawn(BiomeSelectors.categories(biome.getCategory()), chickenData.spawnType, resourceChicken, chickenData.spawnWeight, 1, 2);
                         }
                     }
                 }

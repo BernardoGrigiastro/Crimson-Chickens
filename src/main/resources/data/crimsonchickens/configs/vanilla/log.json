@@ -10,7 +10,7 @@
 	"baseSpeed": 0.25,
 	"isFireImmune": false,
 	"conversion": 250,
-	"biomesWhitelist": ["minecraft:wooded_mountains", "minecraft:wooded_hills", "minecraft:taiga", "minecraft:plains", "minecraft:forest"],
+	"biomesWhitelist": ["minecraft:taiga", "minecraft:plains", "minecraft:forest"],
 	"biomesBlacklist": [],
 	"eggLayTime": 6000,
 	"eggColorBackground": 9995373,

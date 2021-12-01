@@ -27,10 +27,10 @@ repositories {
   }
 
 dependencies {
-    minecraft "com.mojang:minecraft:1.18-rc3"
-    mappings "net.fabricmc:yarn:1.18-rc3+build.2:v2"
-    modImplementation "net.fabricmc:fabric-loader:0.12.5"
-            
+    minecraft "com.mojang:minecraft:1.18"
+    mappings "net.fabricmc:yarn:1.18+build.1:v2"
+    modImplementation "net.fabricmc:fabric-loader:0.12.6"
+
     //Fabric api
     modImplementation "net.fabricmc.fabric-api:fabric-api:0.43.1+1.18"
 
@@ -42,7 +42,7 @@ dependencies {
     modRuntimeOnly "me.shedaniel:RoughlyEnoughItems-fabric:${rei_version}"
 
     modCompileOnly "mcp.mobius.waila:wthit-api:fabric-${wthitVersion}"
-    modRuntime "mcp.mobius.waila:wthit:fabric-${wthitVersion}"
+    modRuntimeOnly "mcp.mobius.waila:wthit:fabric-${wthitVersion}"
 }
 
 processResources {

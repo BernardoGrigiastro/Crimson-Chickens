@@ -24,7 +24,7 @@ public class initChickenConfigs {
             MOD_ROOT = FabricLoader.getInstance().getModContainer(CrimsonChickens.MOD_ID).get().getRootPath();
         else
             // TODO: Un-Hack this !!!!
-            MOD_ROOT = FabricLoader.getInstance().getConfigDir().getParent().resolve("mods/Crimson-Chickens-1.18-rc3-Fabric-v1.0.0.jar");
+            MOD_ROOT = FabricLoader.getInstance().getConfigDir().getParent().resolve("mods/Crimson-Chickens-1.18-Fabric-v1.0.0.jar");
 
         File dir = FabricLoader.getInstance().getConfigDir().resolve(CrimsonChickens.MOD_ID).toFile();
 

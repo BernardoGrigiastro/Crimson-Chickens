@@ -10,7 +10,7 @@
 	"baseSpeed": 0.25,
 	"isFireImmune": false,
 	"conversion": 250,
-	"biomesWhitelist": ["minecraft:river", "minecraft:plains"],
+	"biomesWhitelist": ["minecraft:snowy_plains"],
 	"biomesBlacklist": [],
 	"eggLayTime": 6000,
 	"eggColorBackground": 3390463,

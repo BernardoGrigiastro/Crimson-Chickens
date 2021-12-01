@@ -46,7 +46,12 @@ public class AnimalNet extends Item {
     public ActionResult useOnEntity(ItemStack itemStack, PlayerEntity playerIn, LivingEntity entityIn, Hand handIn) {
         if (playerIn.world.isClient) return ActionResult.PASS;
 
-        // config.SpawnType=1 would mean Resource Chicken would be MONSTER classification
+        // Issue #14, full net can still capture and delete previous mob
+        if (itemStack.hasNbt()) {
+            if (itemStack.getOrCreateNbt().contains("entityCaptured"))
+                return ActionResult.FAIL;
+        }
+
         ResourceChickenData chickenData = null;
         if (entityIn instanceof ResourceChickenEntity) {
             chickenData = ((ResourceChickenEntity) entityIn).chickenData;
@@ -77,6 +82,8 @@ public class AnimalNet extends Item {
             compoundStack.putString("entityDescription", chickenData.displayName);
         else
             compoundStack.putString("entityDescription", entityIn.getType().getTranslationKey());
+
+        playerIn.setStackInHand(handIn, itemStack);     // for Creative to work
 
         playerIn.world.playSound(null, playerIn.getBlockPos(), SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP, SoundCategory.PLAYERS, 1f, 1f);
         playerIn.spawnSweepAttackParticles();

@@ -10,7 +10,7 @@
 	"baseSpeed": 0.25,
 	"isFireImmune": false,
 	"conversion": 250,
-	"biomesWhitelist": ["minecraft:desert", "minecraft:desert_hills", "minecraft:desert_lakes"],
+	"biomesWhitelist": ["minecraft:desert"],
 	"biomesBlacklist": [],
 	"eggLayTime": 6000,
 	"eggColorBackground": 13751162,

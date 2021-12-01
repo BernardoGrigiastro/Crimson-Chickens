@@ -8,22 +8,33 @@ import crimsonfluff.crimsonchickens.init.initTiles;
 import crimsonfluff.crimsonchickens.json.ResourceChickenData;
 import crimsonfluff.crimsonchickens.registry.ChickenRegistry;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.SpawnEggItem;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 
+import java.util.List;
 import java.util.UUID;
 
+@Environment(EnvType.CLIENT)
 public class initClient implements ClientModInitializer {
     public static final Identifier DUCK_EGG_SPAWN_PACKET = new Identifier(CrimsonChickens.MOD_ID, "duck_egg_spawn_packet");
 
@@ -39,6 +50,7 @@ public class initClient implements ClientModInitializer {
         }));
 
         receiveEntityPacket();
+//        ItemTooltipCallback.EVENT.register(this::getTooltip);   // TODO: temporary until REI is done
     }
 
     public void receiveEntityPacket() {
@@ -70,4 +82,25 @@ public class initClient implements ClientModInitializer {
             });
         });
     }
+
+
+//    // TODO: temporary until REI is done
+//    public void getTooltip(ItemStack itemStack, TooltipContext tooltipContext, List<Text> tooltipLines) {
+//        if (itemStack.getItem() instanceof SpawnEggItem) {
+//            // TODO: if begins with MOD_ID its a resource chicken spawn egg
+//
+//            String ss = Registry.ITEM.getId(itemStack.getItem()).toString();        // TODO: is there a better way than this?
+//            ss = ss.substring(0, ss.length() - 10);      // remove '_spawn_egg'
+//
+//            ResourceChickenData child = ChickenRegistry.getRegistry().getChickenDataFromID(ss);
+//            if (child != null) {
+//                if (! (child.parentA.isEmpty() && child.parentB.isEmpty())) {
+//                    tooltipLines.add(new LiteralText("ParentA: " + child.parentA.substring(16)).formatted(Formatting.GRAY));   // remove mod name
+//                    tooltipLines.add(new LiteralText("ParentB: " + child.parentB.substring(16)).formatted(Formatting.GRAY));   // remove mod name
+//                }
+//                if (child.spawnNaturally)
+//                    tooltipLines.add(new LiteralText("Spawns Naturally"));
+//            }
+//        }
+//    }
 }

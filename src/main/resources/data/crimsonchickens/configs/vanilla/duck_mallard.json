@@ -10,7 +10,7 @@
 	"baseSpeed": 0.25,
 	"isFireImmune": false,
 	"conversion": 10,
-	"biomesWhitelist": ["minecraft:plains", "minecraft:river", "minecraft:beach", "minecraft:stone_shore"],
+	"biomesWhitelist": ["minecraft:plains", "minecraft:river", "minecraft:beach"],
 	"biomesBlacklist": [],
 	"eggLayTime": 6000,
 	"eggColorBackground": 10079487,

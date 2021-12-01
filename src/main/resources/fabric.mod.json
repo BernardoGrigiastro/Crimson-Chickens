@@ -16,13 +16,14 @@
   "environment": "*",
   "entrypoints": {
     "client": ["crimsonfluff.crimsonchickens.client.initClient"],
-    "main": ["crimsonfluff.crimsonchickens.CrimsonChickens"]
+    "main": ["crimsonfluff.crimsonchickens.CrimsonChickens"],
+    "rei_plugins": ["crimsonfluff.crimsonchickens.compat.rei.ReiPlugin"]
   },
   "mixins": ["crimsonchickens.mixins.json"],
   "depends": {
-    "fabricloader": ">=0.12.5",
+    "fabricloader": ">=0.12.6",
     "fabric": "*",
-    "minecraft": "1.18-rc.3"
+    "minecraft": "1.18"
   },
   "custom": {
     "waila:plugins": {

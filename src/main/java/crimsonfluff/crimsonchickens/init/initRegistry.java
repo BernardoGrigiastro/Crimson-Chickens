@@ -10,9 +10,11 @@ import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
+import net.minecraft.entity.SpawnRestriction;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.Heightmap;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,27 +39,53 @@ public class initRegistry {
         final Identifier IDENTIFIER = new Identifier(CrimsonChickens.MOD_ID, name);     // was name + "_chicken" - Forge World Breaking !
 
         if (chickenData.isFireImmune) {
-            ENTITY = Registry.register(Registry.ENTITY_TYPE,
-                IDENTIFIER,
-                FabricEntityTypeBuilder.<ResourceChickenEntity>create(
-                    chickenData.spawnType,
-                    name.equals("angry")
-                        ? (type, world) -> new AngryChickenEntity(type, world, chickenData)
-                        : (type, world) -> new ResourceChickenEntity(type, world, chickenData))
+//            ENTITY = Registry.register(Registry.ENTITY_TYPE,
+//                IDENTIFIER,
+//                FabricEntityTypeBuilder.<ResourceChickenEntity>create(
+//                    chickenData.spawnType,
+//                    name.equals("angry")
+//                        ? (type, world) -> new AngryChickenEntity(type, world, chickenData)
+//                        : (type, world) -> new ResourceChickenEntity(type, world, chickenData))
+//                    .dimensions(EntityDimensions.fixed(0.4f, 0.7f))
+//                    .fireImmune()
+//                    .build());
+            ENTITY = Registry.register(Registry.ENTITY_TYPE, IDENTIFIER,
+                FabricEntityTypeBuilder.<ResourceChickenEntity>createMob()
+                    .spawnGroup(chickenData.spawnType)
+                        .entityFactory(name.equals("angry")
+                                ? (type, world) -> new AngryChickenEntity(type, world, chickenData)
+                                : (type, world) -> new ResourceChickenEntity(type, world, chickenData))
+                        .defaultAttributes(ResourceChickenEntity::createChickenAttributes)
                     .dimensions(EntityDimensions.fixed(0.4f, 0.7f))
+                    .spawnRestriction(SpawnRestriction.Location.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
+                        (animal, world, reason, pos, random) -> true)
+    //                  chickenData.spawnType == SpawnGroup.CREATURE ? AnimalEntity::isValidNaturalSpawn : MobEntity::canMobSpawn)
                     .fireImmune()
                     .build());
         }
         else {
-            ENTITY = Registry.register(Registry.ENTITY_TYPE,
-                IDENTIFIER,
-                FabricEntityTypeBuilder.<ResourceChickenEntity>create(
-                    chickenData.spawnType,
-                        name.equals("angry")
-                            ? (type, world) -> new AngryChickenEntity(type, world, chickenData)
-                            : (type, world) -> new ResourceChickenEntity(type, world, chickenData))
+            ENTITY = Registry.register(Registry.ENTITY_TYPE, IDENTIFIER,
+                FabricEntityTypeBuilder.<ResourceChickenEntity>createMob()
+                    .spawnGroup(chickenData.spawnType)
+                    .entityFactory(name.equals("angry")
+                        ? (type, world) -> new AngryChickenEntity(type, world, chickenData)
+                        : (type, world) -> new ResourceChickenEntity(type, world, chickenData))
+                    .defaultAttributes(ResourceChickenEntity::createChickenAttributes)
                     .dimensions(EntityDimensions.fixed(0.4f, 0.7f))
+                    .spawnRestriction(SpawnRestriction.Location.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
+                        (animal, world, reason, pos, random) -> true)
+//                      chickenData.spawnType == SpawnGroup.CREATURE ? AnimalEntity::isValidNaturalSpawn : MobEntity::canMobSpawn)
                     .build());
+
+//                    ENTITY = Registry.register(Registry.ENTITY_TYPE,
+//                IDENTIFIER,
+//                FabricEntityTypeBuilder.<ResourceChickenEntity>create(
+//                    chickenData.spawnType,
+//                        name.equals("angry")
+//                            ? (type, world) -> new AngryChickenEntity(type, world, chickenData)
+//                            : (type, world) -> new ResourceChickenEntity(type, world, chickenData))
+//                    .dimensions(EntityDimensions.fixed(0.4f, 0.7f))
+//                    .build());
         }
 
         final Item SPAWN_EGG = new ChickenSpawnEggItem(ENTITY, chickenData.eggPrimaryColor, chickenData.eggSecondaryColor, new Item.Settings().group(CrimsonChickens.CREATIVE_TAB), chickenData);
