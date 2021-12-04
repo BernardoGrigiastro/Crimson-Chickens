@@ -1,6 +1,6 @@
 {
 	"displayName": "Osmium Chicken",
-	"dropItem": "mekanism:ingot_osmium",
+	"dropItem": "items:c:osmium_ingots",
 	"dropItemNBT": "",
 	"spawnNaturally": false,
 	"spawnType": 1,
