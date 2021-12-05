@@ -47,11 +47,12 @@ public class CrimsonChickens implements ModInitializer {
     public static final Logger LOGGER = LogManager.getLogger(CrimsonChickens.class);
     public static final ItemGroup CREATIVE_TAB = FabricItemGroupBuilder.build(new Identifier(MOD_ID, "tab"), () -> new ItemStack(initItems.EGG_DUCK));
 
-    public static final CrimsonChickensConfig CONFIGURATION = AutoConfig.register(CrimsonChickensConfig.class, GsonConfigSerializer::new).getConfig();
+    public static final initConfigs CONFIG = initConfigs.get_instance();
+    public static final Identifier DUCK_EGG_SPAWN_PACKET = new Identifier(CrimsonChickens.MOD_ID, "duck_egg_spawn_packet");
+
 
     @Override
     public void onInitialize() {
-        initConfigs.register();
         initItems.register();
         initBlocks.register();
         initTiles.register();

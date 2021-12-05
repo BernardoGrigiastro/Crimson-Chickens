@@ -1,6 +1,6 @@
 {
 	"displayName": "Certus Chicken",
-	"dropItem": "appliedenergistics2:certus_quartz_crystal",
+	"dropItem": "ae2:certus_quartz_crystal",
 	"dropItemNBT": "",
 	"spawnNaturally": false,
 	"spawnType": 1,
