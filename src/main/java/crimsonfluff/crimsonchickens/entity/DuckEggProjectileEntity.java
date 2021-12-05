@@ -1,5 +1,6 @@
 package crimsonfluff.crimsonchickens.entity;
 
+import crimsonfluff.crimsonchickens.CrimsonChickens;
 import crimsonfluff.crimsonchickens.client.DuckEggProjectileSpawnPacket;
 import crimsonfluff.crimsonchickens.client.initClient;
 import crimsonfluff.crimsonchickens.init.initItems;
@@ -91,6 +92,6 @@ public class DuckEggProjectileEntity extends ThrownItemEntity implements FlyingI
 
     @Override
     public Packet createSpawnPacket() {
-        return DuckEggProjectileSpawnPacket.create(this, initClient.DUCK_EGG_SPAWN_PACKET);
+        return DuckEggProjectileSpawnPacket.create(this, CrimsonChickens.DUCK_EGG_SPAWN_PACKET);
     }
 }

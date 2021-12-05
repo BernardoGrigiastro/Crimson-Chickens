@@ -47,7 +47,7 @@ public class ReiPlugin implements REIClientPlugin {
                 ResourceChickenData parentA = ChickenRegistry.getRegistry().getChickenDataFromID(chickenData.parentA);
                 ResourceChickenData parentB = ChickenRegistry.getRegistry().getChickenDataFromID(chickenData.parentB);
 
-                registry.add(new breedDisplay(new breedRecipe(new ItemStack(chickenData.spawnEggItem), new ItemStack(parentA.spawnEggItem), new ItemStack(parentB.spawnEggItem))));
+                registry.add(new breedDisplay(new breedRecipe(new ItemStack(parentA.spawnEggItem), new ItemStack(parentB.spawnEggItem), new ItemStack(chickenData.spawnEggItem))));
             }
         });
     }

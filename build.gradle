@@ -7,23 +7,8 @@ version = project.mod_version
 group = project.maven_group
 
 repositories {
-    // Add repositories to retrieve artifacts from in here.
-    // You should only use this when depending on other mods because
-    // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-    // See https://docs.gradle.org/current/userguide/declaring_repositories.html
-    // for more information about repositories.
-
     maven { url "https://maven.shedaniel.me/" }
-
-//    maven {
-//        name = "HYWLA"
-//        url = "https://maven.tehnut.info/"
-//        content {
-//            includeGroup "mcp.mobius.waila"
-//        }
-//    }
-
-  maven { url "https://maven.bai.lol" }
+    maven { url "https://maven.bai.lol" }
   }
 
 dependencies {
@@ -77,21 +62,5 @@ java {
 jar {
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}" }
-    }
-}
-
-// configure the maven publication
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            // add all the jars that should be included when publishing to maven
-            artifact(remapJar) {
-                builtBy remapJar
-            }
-        }
-    }
-
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-    repositories {
     }
 }

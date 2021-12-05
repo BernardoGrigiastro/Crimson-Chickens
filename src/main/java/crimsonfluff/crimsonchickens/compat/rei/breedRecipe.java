@@ -4,9 +4,6 @@ import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.item.ItemStack;
 
-import java.util.Collections;
-import java.util.List;
-
 public record breedRecipe(ItemStack input, ItemStack input2, ItemStack output) {
     public breedRecipe(ItemStack input, ItemStack input2, ItemStack output) {
         this.input = input;

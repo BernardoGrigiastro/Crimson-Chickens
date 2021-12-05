@@ -288,7 +288,7 @@ public class ResourceChickenEntity extends ChickenEntity {
 
     @Override
     public boolean canBreedWith(AnimalEntity entityIn) {
-        if (CrimsonChickens.CONFIGURATION.masterSwitchBreeding == 0) return false;
+        if (CrimsonChickens.CONFIG.MasterSwitchBreeding == 0) return false;
 
         if (this.isInLove() && entityIn.isInLove()) {
             ResourceChickenEntity rce = null;
@@ -297,7 +297,7 @@ public class ResourceChickenEntity extends ChickenEntity {
 
             if (rce == null) return false;
 
-            if (CrimsonChickens.CONFIGURATION.masterSwitchBreeding == 2) {
+            if (CrimsonChickens.CONFIG.MasterSwitchBreeding == 2) {
                 if (! chickenData.canBreed) return false;
                 if (! rce.chickenData.canBreed) return false;
             }
@@ -312,9 +312,9 @@ public class ResourceChickenEntity extends ChickenEntity {
 
             // if breeding with vanilla-replacement chickens...
             if (chickenData.name.equals("chicken") || rce.chickenData.name.equals("chicken"))
-                return (CrimsonChickens.CONFIGURATION.allowBreedingWithVanilla > 0);
+                return (CrimsonChickens.CONFIG.allowBreedingWithVanilla > 0);
 
-            return (CrimsonChickens.CONFIGURATION.allowCrossBreeding);
+            return (CrimsonChickens.CONFIG.allowCrossBreeding);
         }
 
         return false;
@@ -353,7 +353,7 @@ public class ResourceChickenEntity extends ChickenEntity {
             if (chickenData.name.equals("chicken")) {
                 int r = worldIn.random.nextInt(100) + 1;
 
-                if (r <= CrimsonChickens.CONFIGURATION.allowBreedingWithVanilla)
+                if (r <= CrimsonChickens.CONFIG.allowBreedingWithVanilla)
                     newChicken = initRegistry.MOD_CHICKENS.get(rce.chickenData.name).create(worldIn);
                 else
                     newChicken = initRegistry.MOD_CHICKENS.get("chicken").create(worldIn);
@@ -364,7 +364,7 @@ public class ResourceChickenEntity extends ChickenEntity {
             else if (rce.chickenData.name.equals("chicken")) {
                 int r = worldIn.random.nextInt(100) + 1;
 
-                if (r <= CrimsonChickens.CONFIGURATION.allowBreedingWithVanilla)
+                if (r <= CrimsonChickens.CONFIG.allowBreedingWithVanilla)
                     newChicken = initRegistry.MOD_CHICKENS.get(chickenData.name).create(worldIn);
                 else
                     newChicken = initRegistry.MOD_CHICKENS.get(rce.chickenData.name).create(worldIn);
@@ -373,7 +373,7 @@ public class ResourceChickenEntity extends ChickenEntity {
             }
 
             // Work out cross-breeding types
-            if (CrimsonChickens.CONFIGURATION.allowCrossBreeding) {
+            if (CrimsonChickens.CONFIG.allowCrossBreeding) {
                 String parentA = this.chickenData.getEntityTypeRegistryID().toString();
                 String parentB = ((ResourceChickenEntity) ageableEntity).chickenData.getEntityTypeRegistryID().toString();
 
@@ -415,7 +415,7 @@ public class ResourceChickenEntity extends ChickenEntity {
         if (stack.isEmpty()) return false;
 
         // Can use resource drop as food/breed, *and* regular food (seeds)
-        if (CrimsonChickens.CONFIGURATION.dropAsBreedingItem) {
+        if (CrimsonChickens.CONFIG.dropAsBreedingItem) {
             if (stack.hasNbt() && ! chickenData.dropItemNBT.isEmpty())
                 return chickenData.dropItemNBT == stack.getNbt();                               // TODO: Test this
             else
@@ -591,7 +591,7 @@ public class ResourceChickenEntity extends ChickenEntity {
         //if (! CrimsonChickens.CONFIGURATION.allowFakeplayerLootDrops) return; // TODO: <- redo this
 
         int r = new Random().nextInt(100) + 1;
-        if (r <= CrimsonChickens.CONFIGURATION.allowDeathDropResource)
+        if (r <= CrimsonChickens.CONFIG.allowDeathDropResource)
             CrimsonChickens.calcDrops(this.dataTracker.get(GAIN), chickenData, lootingMultiplier).forEach(this::dropStack);
     }
 
@@ -621,27 +621,6 @@ public class ResourceChickenEntity extends ChickenEntity {
 
         return SoundEvents.ENTITY_CHICKEN_DEATH;
     }
-
-//    @Override
-//    public void addProbeEntityInfo(ProbeMode mode, IProbeInfo probeInfo, PlayerEntity player, World world, Entity entity, IProbeHitdataTracker data) {
-//        if (this.dataTracker.get(ANALYZED)) {
-//            probeInfo.text(new TranslatableText("tip.crimsonchickens.growth", this.dataTracker.get(GROWTH)));
-//            probeInfo.text(new TranslatableText("tip.crimsonchickens.gain", this.dataTracker.get(GAIN)));
-//            probeInfo.text(new TranslatableText("tip.crimsonchickens.strength", this.dataTracker.get(STRENGTH)));
-//        }
-//
-//        if (! this.isBaby()) {
-//            if (this.chickenData.eggLayTime != 0) {
-//                //int secs = this.eggLayTime / 20;
-//                probeInfo.text(new TranslatableText("tip.crimsonchickens.egg", CrimsonChickens.formatTime(this.eggLayTime)));
-//            }
-//        }
-//
-//        if (this.conversionCount != 0) {
-//            probeInfo.text(new TranslatableText("tip.crimsonchickens.conv", new TranslatableText(this.conversionDescID)));
-//            probeInfo.progress(this.conversionCount, this.conversionRequired);
-//        }
-//    }
 
     @Override
     protected void initDataTracker() {
@@ -756,7 +735,7 @@ public class ResourceChickenEntity extends ChickenEntity {
                     return super.interactMob(playerIn, handIn);     // mainly controls food
 
                 if (itemStack.getItem() instanceof ShearsItem) {
-                    if (CrimsonChickens.CONFIGURATION.allowShearingChickens) {
+                    if (CrimsonChickens.CONFIG.allowShearingChickens) {
                         itemStack.damage(1, playerIn, plyr -> plyr.sendToolBreakStatus(handIn));
 
                         World world = playerIn.world;
@@ -779,7 +758,7 @@ public class ResourceChickenEntity extends ChickenEntity {
                 }
 
                 // Conversion only works on 'Vanilla' chickens
-                if (! CrimsonChickens.CONFIGURATION.allowConvertingVanilla) return ActionResult.FAIL;
+                if (! CrimsonChickens.CONFIG.allowConvertingVanilla) return ActionResult.FAIL;
                 if (! this.chickenData.name.equals("chicken")) return ActionResult.FAIL;
 
                 // loop thru registry and find dropItem that matches item player is holding (itemStack)
